@@ -15,25 +15,34 @@ def do_work(count):
     sleep(1)
     return count
 
-def worker(run):
+def worker(run, function, data):
     count = 0
     ch = True
     while ch:
         if run.value == 2:
-            count = do_work(count)
+            function(data)
         elif run.value == 0:
+            ch = False
+            print("Terminator")
             return
         elif run.value == 1:
+            print("Paused")
             pass
         
-if __name__ == "__main__":
-    run = Value("i", 2)
-    p = Process(target=worker, args=(run,))
+def main_run(function, data, cancel):
+    # run = Value("i", cancel)
+    run = cancel
+    p = Process(target=worker, args=(run, function, data))
     p.start()
     while True:
-        process = int(input("0, 1, 2\n"))
-        run.value = process
-        if process == 0:
+        if run.value == 0:
             print("Terminated")
+            sleep(1)
+            p.terminate()
             p.join()
             break
+        if run.value == 1:
+            print("AAAAAAAA")
+
+# if __name__ == '__main__':
+#     main_run()

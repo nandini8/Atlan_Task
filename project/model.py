@@ -1,24 +1,56 @@
 import csv, sqlite3, os
-from config import DATABASE, UPLOAD_FOLDER
-# FILENAME = os.path.join(UPLOAD_FOLDER, 'My_First_Form.csv')
+import pandas as pd
+
+from config import DATABASE_URL, UPLOAD_FOLDER
+import time
+FILENAME = os.path.join(UPLOAD_FOLDER, 'My_First_Form.csv')
+
+
+
+def insert_query(df):
+    cols = "'" + "','".join([str(x) for x in df.columns]) + "'"
+    INSERT_QUERY = "INSERT INTO DETAILS ("+ cols + ") VALUES (?, ?,?,?,?,?,?,?,?,?);"
+    return INSERT_QUERY
+
+
+def get_rows(FILENAME):
+    df = pd.read_csv(FILENAME)
+    rows = []
+    for i in df.index:
+        row = [x for x in [df[y][i]  for y in df.columns]]
+        # print(row)
+        rows.append(row)
+    # print(rows)
+    return rows, insert_query(df)
+
+
 
 
 def save_data_in_db(FILENAME):
     con = sqlite3.connect(DATABASE)
     cur = con.cursor()
-
-
-    with open(FILENAME,'r') as fin:
-        csv_dict_reader = csv.DictReader(fin) # comma is default delimiter
-        for rows in csv_dict_reader:
-            to_db = [(i['Response ID'], i['Name of the respondent'], i['Gender of the respondent'], i['Age of the respondent'],i['Hobbies of the respondent_Reading books'], i['Hobbies of the respondent_Listening to Music'], i['Hobbies of the respondent_Playing Sports'], i['Hobbies of the respondent_Watching Movies'], i['Hobbies of the respondent_Gardening'], i['Mobile number of the respondent']) for i in csv_dict_reader]
-        query = """INSERT INTO DETAILS ('Response ID', 'Name of the respondent','Gender of the respondent','Age of the respondent','Hobbies of the respondent_Reading books','Hobbies of the respondent_Listening to Music','Hobbies of the respondent_Playing Sports','Hobbies of the respondent_Watching Movies','Hobbies of the respondent_Gardening','Mobile number of the respondent') VALUES (?, ?,?,?,?,?,?,?,?,?);"""
-        print(query)
-        cur.executemany(query, to_db)
+    rows, query = get_rows(FILENAME)
+    cur.executemany(query, rows)
     con.commit()
     con.close()
-
     
+# if __name__ == '__main__':
+#     save_data_in_db(FILENAME)
 
 
+# from sqlalchemy import Column, Integer, String
+# from database import Base
+
+# class Details(Base):
+#     __tablename__ = 'details'
+#     id = Column(Integer, primary_key=True)
+#     name = Column(String(50), unique=True)
+#     email = Column(String(120), unique=True)
+
+#     def __init__(self, name=None, email=None):
+#         self.name = name
+#         self.email = email
+
+#     def __repr__(self):
+#         return '<User %r>' % (self.name)
 
