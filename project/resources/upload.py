@@ -15,8 +15,10 @@ def data_pre_process(filename):
     path = os.path.join(UPLOAD_FOLDER, filename)
     file = pd.read_csv(path)
     data = file.to_dict('index')
+    # print(data)
     gen = ((key,value) for key,value in data.items())
     return gen
+
 
 def cache_to_redis(data):
     db = redis.Redis('localhost')
@@ -26,14 +28,14 @@ def cache_to_redis(data):
         if cancel.value == 1 or cancel.value == 3:
             value = next(data)
             db.hmset( value[0], value[1])
-            print(value)
+            # print(value[0])
         elif cancel.value == 0:
             db.flushdb(asynchronous=False)
             return
     except StopIteration as e:
         # save_data_in_db(os.path.join(UPLOAD_FOLDER, file.filename))
         save_data_in_db(db)
-        print("saved!!")
+        print("saved!!", db.keys(), db.dbsize())
         cancel.value = 0
         return
         

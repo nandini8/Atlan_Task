@@ -7,10 +7,16 @@ FILENAME = os.path.join(UPLOAD_FOLDER, 'My_First_Form.csv')
 
 
 
-def insert_query(df):
-    cols = "'" + "','".join([str(x) for x in df.columns]) + "'"
+def insert_query(cols, values):
+    cols = "'" + "','".join([str(x) for x in cols]) + "'"
+    print(cols)
+    con = sqlite3.connect(DATABASE_URL)
+    cur = con.cursor()
     INSERT_QUERY = "INSERT INTO DETAILS ("+ cols + ") VALUES (?, ?,?,?,?,?,?,?,?,?);"
-    return INSERT_QUERY
+    cur.execute(INSERT_QUERY, values)
+    con.commit()
+    con.close()
+    # return INSERT_QUERY
 
 
 def get_rows(FILENAME):
@@ -25,9 +31,15 @@ def get_rows(FILENAME):
 
 def save_data_in_db(redis_db):
     print(redis_db)
-    # print(redis_db.hgetall(0))
-    data = redis_db.hgetall(0)
-    print(data['Response ID'.encode()])
+    print(redis_db.dbsize())
+    keys = redis_db.keys()
+    cols = [x.decode() for x in redis_db.hgetall(0).keys()]
+    print(cols)
+    for key in keys:
+        print(key)
+        values =[x.decode() for x in redis_db.hgetall(key).values()]
+        print(values)
+        insert_query(cols, values)
 
 # def save_data_in_db(FILENAME):
 #     con = sqlite3.connect(DATABASE)
