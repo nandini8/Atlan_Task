@@ -10,25 +10,17 @@ Program to terminate/pause/resume a process
 from multiprocessing import Process, Value
 from time import sleep
 
-def do_work(count):
-    print("Working... ", count)
-    count += 1
-    sleep(1)
-    return count
-
 def worker(run, function, data):
     index = 0
     ch = True
     while ch:
         if run.value == 3 or run.value == 1:
-            index = function(data)
-            print(index)
+            function(data)
         elif run.value == 0:
             ch = False
-            print("Terminator")
+            print("Terminated")
             return
         elif run.value == 2:
-            sleep(1)
             print("Paused", index)
             
         
@@ -40,7 +32,7 @@ def main_run(function, data, cancel):
     while True:
         if run.value == 0:
             print("Terminated")
-            sleep(1)
+            # sleep(1)
             p.terminate()
             p.join()
             break

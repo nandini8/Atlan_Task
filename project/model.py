@@ -23,16 +23,19 @@ def get_rows(FILENAME):
     # print(rows)
     return rows, insert_query(df)
 
+def save_data_in_db(redis_db):
+    print(redis_db)
+    # print(redis_db.hgetall(0))
+    data = redis_db.hgetall(0)
+    print(data['Response ID'.encode()])
 
-
-
-def save_data_in_db(FILENAME):
-    con = sqlite3.connect(DATABASE)
-    cur = con.cursor()
-    rows, query = get_rows(FILENAME)
-    cur.executemany(query, rows)
-    con.commit()
-    con.close()
+# def save_data_in_db(FILENAME):
+#     con = sqlite3.connect(DATABASE)
+#     cur = con.cursor()
+#     rows, query = get_rows(FILENAME)
+#     cur.executemany(query, rows)
+#     con.commit()
+#     con.close()
     
 # if __name__ == '__main__':
 #     save_data_in_db(FILENAME)

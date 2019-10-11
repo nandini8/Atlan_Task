@@ -15,44 +15,36 @@ def data_pre_process(filename):
     path = os.path.join(UPLOAD_FOLDER, filename)
     file = pd.read_csv(path)
     data = file.to_dict('index')
-    # print(data)
     gen = ((key,value) for key,value in data.items())
     return gen
-
-# def cache_to_redis(data):
-#     db = redis.Redis('localhost')
-    
-#     if data == None:
-#         return
-#     index = 0
-#     for key in data.keys():
-#         time.sleep(1)
-#         db.hmset(key, data[key])
-#         print("Running ", index)
-#         index += 1
-#     db.close()
-#     return index
 
 def cache_to_redis(data):
     db = redis.Redis('localhost')
     if data == None:
-        time.sleep(1)
         return
-    if cancel.value == 1 or cancel.value == 3:
-        time.sleep(1)
-        value = next(data)
-        db.hmset( value[0], value[1])
-        return value
-    else:
-        time.sleep(1)
-        return 0
+    try:
+        if cancel.value == 1 or cancel.value == 3:
+            value = next(data)
+            db.hmset( value[0], value[1])
+            print(value)
+        elif cancel.value == 0:
+            db.flushdb(asynchronous=False)
+            return
+    except StopIteration as e:
+        # save_data_in_db(os.path.join(UPLOAD_FOLDER, file.filename))
+        save_data_in_db(db)
+        print("saved!!")
+        cancel.value = 0
+        return
+        
+
+        
 
     
 cancel = Value("i", 1)
 
 class upload(Resource):
     def get(self):
-        # print("What")
         pass
 
     def post(self):
