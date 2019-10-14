@@ -1,3 +1,6 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
-COPY ./requirements.txt /var/www/requirements.txt
-RUN pip install -r /var/www/requirements.txt
+FROM python:3
+COPY . /app
+WORKDIR /app
+RUN pip install -r requirements.txt
+ENTRYPOINT ["python"]
+CMD ["run.py"]
