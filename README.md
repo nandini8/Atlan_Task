@@ -3,8 +3,11 @@
 ## Endpoints for the API
 * /api/upload: Saves the data from csv file to database.
   * Accepts POST request with 2 form inputs
+  
     * file: csv file
-    * cancel: 0: To terminate the process
+    
+    * cancel: 
+              0: To terminate the process
     
               1: To start the process
               
