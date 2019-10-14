@@ -18,7 +18,7 @@ class download(Resource):
                 filters['date'] = datetime.strptime(request.form['date'], "%d-%m-%Y %H:%M")
             else:
                 filters[i] = request.form[i]
-        #get_data_from_db(filters, i)
+
         for i in range(20):
             p = Process(target=get_data_from_db, args=(filters, i, ))
             print(p.name)
