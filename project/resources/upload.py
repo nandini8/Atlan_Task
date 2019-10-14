@@ -26,9 +26,9 @@ def cache_to_redis(data):
         return
     try:
         if cancel.value == 1 or cancel.value == 3:
-            value = next(data)
-            db.hmset( value[0], value[1])
-            # print(value[0])
+            value = next(data)   
+            db.hmset(value[0], value[1])
+            print(value[0])
         elif cancel.value == 0:
             db.flushdb(asynchronous=False)
             return
@@ -39,10 +39,6 @@ def cache_to_redis(data):
         cancel.value = 0
         return
         
-
-        
-
-    
 cancel = Value("i", 1)
 
 class upload(Resource):

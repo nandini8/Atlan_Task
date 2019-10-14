@@ -15,6 +15,7 @@ def worker(run, function, data):
     ch = True
     while ch:
         if run.value == 3 or run.value == 1:
+            # sleep(1)
             function(data)
         elif run.value == 0:
             ch = False
