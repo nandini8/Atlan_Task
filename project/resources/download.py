@@ -23,11 +23,3 @@ class download(Resource):
             p = Process(target=get_data_from_db, args=(filters, i, ))
             print(p.name)
             p.start()
-            
-            
-        
-
-
-
-
-        
