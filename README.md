@@ -1,7 +1,7 @@
 # Taskmanager for Long Running Jobs - Backend Challenge
 
 ## Task
-The `Collect` platform of "<Insert Company name here>" has a variety of long-running tasks which require time and resources on the servers. The task was to design a system such that these long running jobs can be triggered off and not consume the valuable resources. For this, we have to design the REST APIs with the help of which the client now has the capabilities to pause/stop/terminate the long running jobs.
+The `Collect` platform of "Atlan" has a variety of long-running tasks which require time and resources on the servers. The task was to design a system such that these long running jobs can be triggered off and not consume the valuable resources. For this, we have to design the REST APIs with the help of which the client now has the capabilities to pause/stop/terminate the long running jobs.
 
 ## Tech Stacks Used
 1. Flask (Python Web Framework)
@@ -33,7 +33,7 @@ cd taskmanager/
 
 * Activate the virtual environment using the following command
 ```
-source venv/bin/activate
+source venv2/bin/activate
 ```
 
 * Next we have to set up redis-server on the system, follow the following digitalocean tutorial
@@ -43,6 +43,7 @@ https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis
 
 * Generate the fake csv data file using the following command
 ```
+cd api/
 python data.py
 ```
 The csv file is saved as `data.csv` inside the `files/datasets` folder.
@@ -76,7 +77,7 @@ http GET http://localhost:5000/tasks/
 
 * For testing the csv upload operation send `POST` request with the csv file location according to the following url
 ```
-http -f POST http://localhost:5000/tasks/upload file@/home/vishalpolley/Desktop/socialcops/api/files/datasets/data.csv
+http -f POST http://localhost:5000/tasks/upload file@/home/your_name/path/to/taskmanager/api/files/datasets/data.csv
 ```
 
   The uploaded csv is saved inside files/uploads folder named data.csv
@@ -92,19 +93,19 @@ http GET http://localhost:5000/tasks/download from=2010-02-15 till=2019-03-15
 
 * For checking the status of the currently executing tasks copy the `task_id` from the currently executing task and send the GET request to the particular url
 ```
-http GET http://localhost:5000/tasks/b88a299c-b2cb-45e2-a0db-ed6244edf47d
+http GET http://localhost:5000/tasks/task_id
 ```
 
 
 * For performing `pause` operation on the currently executing task send the GET request with the pause parameter to the task url
 ```
-http GET http://localhost:5000/tasks/b88a299c-b2cb-45e2-a0db-ed6244edf47d/pause
+http GET http://localhost:5000/tasks/task_id/pause
 ```
 
 
 * For performing `stop` operation on the currently executing task send the GET request with the stop parameter to the task url
 ```
-http GET http://localhost:5000/tasks/02834f3d-b594-4eb4-9150-2aa069c36986/stop
+http GET http://localhost:5000/tasks/task_id/stop
 ```
 
 
